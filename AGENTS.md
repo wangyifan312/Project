@@ -31,6 +31,8 @@ All implementation and verification work must stay aligned with the chip spec. I
 7. Do not carry forward old `axi4_master` module assumptions, interfaces, or terminology unless they are explicitly reintroduced by the current spec.
 8. Place RTL code only under the owned module `rtl/` directory.
 9. Place module FS and register-table documents only under the owned module `doc/` directory, unless the document is project-wide and belongs in `docs/`.
+10. Place UVM verification code only under the owned `u_core_dv_*` directory.
+11. CPU currently does not use a standalone top-level DV directory unless the user explicitly asks for one.
 
 ## Environment Assumption
 
@@ -67,8 +69,13 @@ When extracting implementation requirements from the document, use these project
 - `u_core_module_spm/doc/`: SPM FS documents and register tables only
 - `u_core_top_soc/rtl/`: top-level integration RTL only
 - `u_core_top_soc/doc/`: top-level FS documents and register tables only
+- `u_core_dv_dma/`: DMA UVM verification only
+- `u_core_dv_npu/`: NPU UVM verification only
+- `u_core_dv_spm/`: SPM UVM verification only
+- `u_core_dv_top_soc/`: top-level SoC UVM verification only
 
 As the repository grows, keep code and documentation inside the owning module directory. Do not place RTL outside `rtl/`, and do not place module FS or register-list documents outside `doc/`.
+For verification work, do not place UVM source outside the owning `u_core_dv_*` directory.
 
 ## Design Workflow
 
@@ -157,6 +164,12 @@ When assisting in this repository:
 - `u_core_module_npu/{rtl,doc}`
 - `u_core_module_spm/{rtl,doc}`
 - `u_core_top_soc/{rtl,doc}`
+- Current DV layout:
+- `u_core_dv_dma/{tb,env,agent,seq,test,sim,doc}`
+- `u_core_dv_npu/{tb,env,agent,seq,test,sim,doc}`
+- `u_core_dv_spm/{tb,env,agent,seq,test,sim,doc}`
+- `u_core_dv_top_soc/{tb,env,agent,seq,test,sim,doc}`
+- CPU currently has no standalone `u_core_dv_cpu/` root.
 - Git flow reference: `docs/git_workflow.md`
 - Legacy `axi4_master` project references are no longer the default working context.
 - The current workflow and conventions are expected to evolve; update this file as new team norms are established.
