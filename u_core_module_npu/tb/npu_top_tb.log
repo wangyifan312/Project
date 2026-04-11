@@ -1,0 +1,55 @@
+[0][NPU_TB] NPU TB log opened
+[75000][NPU_TB] Released reset
+[75000][NPU_TB] Programming NPU registers for ktile=2 smoke case
+[75000][NPU_TB] AXI-Lite WRITE addr=0x10000000 data=0x00000000
+[115000][NPU_TB] AXI-Lite WRITE done addr=0x10000000
+[115000][NPU_TB] AXI-Lite WRITE addr=0x10000004 data=0x00000000
+[155000][NPU_TB] AXI-Lite WRITE done addr=0x10000004
+[155000][NPU_TB] AXI-Lite WRITE addr=0x10000008 data=0x00000002
+[195000][NPU_TB] AXI-Lite WRITE done addr=0x10000008
+[195000][NPU_TB] AXI-Lite WRITE addr=0x1000000c data=0x00000000
+[235000][NPU_TB] AXI-Lite WRITE done addr=0x1000000c
+[235000][NPU_TB] AXI-Lite WRITE addr=0x10000010 data=0x00000001
+[275000][NPU_TB] AXI-Lite WRITE done addr=0x10000010
+[285000][NPU_TB] SPM->NPU vec handshake act_buf=0 wgt_buf=0 k_idx=0 act_vec=0x1010101010101010101010101010101 wgt_vec=0x2020202020202020202020202020202
+[295000][NPU_TB] SPM->NPU vec handshake act_buf=0 wgt_buf=0 k_idx=1 act_vec=0x3030303030303030303030303030303 wgt_vec=0x4040404040404040404040404040404
+[315000][NPU_TB] NPU->SPM row write buf=0 row=0 mask=0xffff data=0xe000e000e000e000e000e000e000e000e000e000e000e000e000e000e000e last=0
+[315000][NPU_TB] CHECK PASS: output row 0 matched expected quantized result
+[325000][NPU_TB] NPU->SPM row write buf=0 row=1 mask=0xffff data=0xe000e000e000e000e000e000e000e000e000e000e000e000e000e000e000e last=0
+[325000][NPU_TB] CHECK PASS: output row 1 matched expected quantized result
+[335000][NPU_TB] NPU->SPM row write buf=0 row=2 mask=0xffff data=0xe000e000e000e000e000e000e000e000e000e000e000e000e000e000e000e last=0
+[335000][NPU_TB] CHECK PASS: output row 2 matched expected quantized result
+[345000][NPU_TB] NPU->SPM row write buf=0 row=3 mask=0xffff data=0xe000e000e000e000e000e000e000e000e000e000e000e000e000e000e000e last=0
+[345000][NPU_TB] CHECK PASS: output row 3 matched expected quantized result
+[355000][NPU_TB] NPU->SPM row write buf=0 row=4 mask=0xffff data=0xe000e000e000e000e000e000e000e000e000e000e000e000e000e000e000e last=0
+[355000][NPU_TB] CHECK PASS: output row 4 matched expected quantized result
+[365000][NPU_TB] NPU->SPM row write buf=0 row=5 mask=0xffff data=0xe000e000e000e000e000e000e000e000e000e000e000e000e000e000e000e last=0
+[365000][NPU_TB] CHECK PASS: output row 5 matched expected quantized result
+[375000][NPU_TB] NPU->SPM row write buf=0 row=6 mask=0xffff data=0xe000e000e000e000e000e000e000e000e000e000e000e000e000e000e000e last=0
+[375000][NPU_TB] CHECK PASS: output row 6 matched expected quantized result
+[385000][NPU_TB] NPU->SPM row write buf=0 row=7 mask=0xffff data=0xe000e000e000e000e000e000e000e000e000e000e000e000e000e000e000e last=0
+[385000][NPU_TB] CHECK PASS: output row 7 matched expected quantized result
+[395000][NPU_TB] NPU->SPM row write buf=0 row=8 mask=0xffff data=0xe000e000e000e000e000e000e000e000e000e000e000e000e000e000e000e last=0
+[395000][NPU_TB] CHECK PASS: output row 8 matched expected quantized result
+[405000][NPU_TB] NPU->SPM row write buf=0 row=9 mask=0xffff data=0xe000e000e000e000e000e000e000e000e000e000e000e000e000e000e000e last=0
+[405000][NPU_TB] CHECK PASS: output row 9 matched expected quantized result
+[415000][NPU_TB] NPU->SPM row write buf=0 row=10 mask=0xffff data=0xe000e000e000e000e000e000e000e000e000e000e000e000e000e000e000e last=0
+[415000][NPU_TB] CHECK PASS: output row 10 matched expected quantized result
+[425000][NPU_TB] NPU->SPM row write buf=0 row=11 mask=0xffff data=0xe000e000e000e000e000e000e000e000e000e000e000e000e000e000e000e last=0
+[425000][NPU_TB] CHECK PASS: output row 11 matched expected quantized result
+[435000][NPU_TB] NPU->SPM row write buf=0 row=12 mask=0xffff data=0xe000e000e000e000e000e000e000e000e000e000e000e000e000e000e000e last=0
+[435000][NPU_TB] CHECK PASS: output row 12 matched expected quantized result
+[445000][NPU_TB] NPU->SPM row write buf=0 row=13 mask=0xffff data=0xe000e000e000e000e000e000e000e000e000e000e000e000e000e000e000e last=0
+[445000][NPU_TB] CHECK PASS: output row 13 matched expected quantized result
+[455000][NPU_TB] NPU->SPM row write buf=0 row=14 mask=0xffff data=0xe000e000e000e000e000e000e000e000e000e000e000e000e000e000e000e last=0
+[455000][NPU_TB] CHECK PASS: output row 14 matched expected quantized result
+[465000][NPU_TB] NPU->SPM row write buf=0 row=15 mask=0xffff data=0xe000e000e000e000e000e000e000e000e000e000e000e000e000e000e000e last=1
+[465000][NPU_TB] CHECK PASS: output row 15 matched expected quantized result
+[475000][NPU_TB] Observed npu_done
+[475000][NPU_TB] AXI-Lite READ addr=0x10000014
+[505000][NPU_TB] AXI-Lite READ data addr=0x10000014 data=0x00000004
+[505000][NPU_TB] CHECK PASS: NPU_STATUS=0x00000004
+[505000][NPU_TB] AXI-Lite READ addr=0x1000001c
+[535000][NPU_TB] AXI-Lite READ data addr=0x1000001c data=0x00000003
+[535000][NPU_TB] CHECK PASS: busy_cycles=3
+[535000][NPU_TB] NPU TB PASS: wrote 16 rows, status=0x00000004, busy_cycles=3

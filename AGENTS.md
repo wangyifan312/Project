@@ -33,6 +33,7 @@ All implementation and verification work must stay aligned with the chip spec. I
 9. Place module FS and register-table documents only under the owned module `doc/` directory, unless the document is project-wide and belongs in `docs/`.
 10. Place UVM verification code only under the owned `u_core_dv_*` directory.
 11. CPU currently does not use a standalone top-level DV directory unless the user explicitly asks for one.
+12. Lightweight module-local non-UVM smoke tests may be placed under the owned module `tb/` directory.
 
 ## Environment Assumption
 
@@ -61,14 +62,19 @@ When extracting implementation requirements from the document, use these project
 - `docs/`: project-wide specification notes, architecture notes, interface notes, and workflow documents
 - `u_core_module_cpu/rtl/`: CPU RTL and imported CPU source
 - `u_core_module_cpu/doc/`: CPU FS documents and register tables only
+- `u_core_module_cpu/tb/`: lightweight module-local non-UVM tests when needed
 - `u_core_module_dma/rtl/`: DMA RTL only
 - `u_core_module_dma/doc/`: DMA FS documents and register tables only
+- `u_core_module_dma/tb/`: lightweight module-local non-UVM tests
 - `u_core_module_npu/rtl/`: NPU RTL only
 - `u_core_module_npu/doc/`: NPU FS documents and register tables only
+- `u_core_module_npu/tb/`: lightweight module-local non-UVM tests
 - `u_core_module_spm/rtl/`: SPM RTL only
 - `u_core_module_spm/doc/`: SPM FS documents and register tables only
+- `u_core_module_spm/tb/`: lightweight module-local non-UVM tests when needed
 - `u_core_top_soc/rtl/`: top-level integration RTL only
 - `u_core_top_soc/doc/`: top-level FS documents and register tables only
+- `u_core_top_soc/tb/`: lightweight top-level directed tests when needed
 - `u_core_dv_dma/`: DMA UVM verification only
 - `u_core_dv_npu/`: NPU UVM verification only
 - `u_core_dv_spm/`: SPM UVM verification only
@@ -76,6 +82,7 @@ When extracting implementation requirements from the document, use these project
 
 As the repository grows, keep code and documentation inside the owning module directory. Do not place RTL outside `rtl/`, and do not place module FS or register-list documents outside `doc/`.
 For verification work, do not place UVM source outside the owning `u_core_dv_*` directory.
+Keep module `tb/` focused on simple directed tests and smoke-test content, not full UVM environments.
 
 ## Design Workflow
 

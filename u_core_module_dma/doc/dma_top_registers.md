@@ -11,9 +11,9 @@ DMA CSR base address:
 | `DMA_DESC_CFG0` | `RW` | `0x1000_1000` | `0x0000_0000` | `32` |
 | `DMA_SRC_ADDR` | `RW` | `0x1000_1004` | `0x0000_0000` | `32` |
 | `DMA_DST_ADDR` | `RW` | `0x1000_1008` | `0x0000_0000` | `32` |
-| `DMA_ROW_CFG` | `RW` | `0x1000_100C` | `0x0000_0000` | `32` |
-| `DMA_STRIDE_CFG` | `RW` | `0x1000_1010` | `0x0000_0000` | `32` |
-| `DMA_LOCAL_CFG` | `RW` | `0x1000_1014` | `0x0000_0000` | `32` |
+| `DMA_DESC_CFG1` | `RW` | `0x1000_100C` | `0x0000_0000` | `32` |
+| `DMA_DESC_RSVD0` | `RO` | `0x1000_1010` | `0x0000_0000` | `32` |
+| `DMA_DESC_RSVD1` | `RO` | `0x1000_1014` | `0x0000_0000` | `32` |
 | `DMA_CMD` | `W1P` | `0x1000_1018` | `0x0000_0000` | `32` |
 | `DMA_STATUS` | `RO` | `0x1000_101C` | `0x0000_0000` | `32` |
 | `DMA_FIFO_STATUS` | `RO` | `0x1000_1020` | `0x0000_0001` | `32` |
@@ -28,22 +28,19 @@ DMA CSR base address:
 
 - `[1:0]`: `op_type`
 - `[3:2]`: `buf_sel`
-- `[19:4]`: `flags`
+- `[6:4]`: `spm_row_base`
+- `[13:7]`: `row_len`
+- `[17:14]`: `row_cnt`
+- `[31:18]`: reserved
 
-### `DMA_ROW_CFG`
+### `DMA_DESC_CFG1`
 
-- `[15:0]`: `row_len`
-- `[31:16]`: `row_cnt`
-
-### `DMA_STRIDE_CFG`
-
-- `[15:0]`: `src_stride`
-- `[31:16]`: `dst_stride`
-
-### `DMA_LOCAL_CFG`
-
-- `[15:0]`: `spm_row_base`
-- `[31:16]`: `tile_id`
+- `[9:0]`: `ext_stride_units`
+- unit: `64B`
+- active meaning:
+  - `LOAD_ACT / LOAD_WGT`: expands to `src_stride = ext_stride_units << 6`
+  - `STORE_OUT`: expands to `dst_stride = ext_stride_units << 6`
+- `[31:10]`: reserved
 
 ### `DMA_CMD`
 
@@ -65,14 +62,21 @@ DMA CSR base address:
 
 - `[7:0]`: `dma_error_code`
 
+## First-Version Compact Descriptor Rule
+
+- first-version staging descriptor uses `4` config writes plus `1` submit write
+- all sub-`32b` fields are packed into `DMA_DESC_CFG0` / `DMA_DESC_CFG1`
+- software no longer needs separate writes for `row_cfg` / `stride_cfg` / `local_cfg`
+
 ## First-Version Descriptor Constraint
 
 - `row_len` must satisfy `1 <= row_len <= 64`
 - `row_cnt` must be non-zero
+- `row_cnt` is encoded in `4b`, current valid range remains within local row space
 - `LOAD_ACT/LOAD_WGT`: `buf_sel` must be `0` or `1`
 - `STORE_OUT`: `buf_sel` must be `0`
 - `src_addr` / `dst_addr` must be `64B` aligned for the active direction
-- `src_stride` / `dst_stride` must be `64B` aligned for the active direction
+- `ext_stride_units` is interpreted in `64B` units
 - `spm_row_base + row_cnt` must not exceed `8`
 
 ## Error Code Definition

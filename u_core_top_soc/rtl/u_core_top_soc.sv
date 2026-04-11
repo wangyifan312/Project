@@ -79,6 +79,46 @@ module u_core_top_soc (
   logic [AXIL_DATA_W-1:0]         dma_axil_rdata;
   logic [1:0]                     dma_axil_rresp;
 
+  logic                           boot_axil_awvalid;
+  logic                           boot_axil_awready;
+  logic [AXIL_ADDR_W-1:0]         boot_axil_awaddr;
+  logic [2:0]                     boot_axil_awprot;
+  logic                           boot_axil_wvalid;
+  logic                           boot_axil_wready;
+  logic [AXIL_DATA_W-1:0]         boot_axil_wdata;
+  logic [(AXIL_DATA_W/8)-1:0]     boot_axil_wstrb;
+  logic                           boot_axil_bvalid;
+  logic                           boot_axil_bready;
+  logic [1:0]                     boot_axil_bresp;
+  logic                           boot_axil_arvalid;
+  logic                           boot_axil_arready;
+  logic [AXIL_ADDR_W-1:0]         boot_axil_araddr;
+  logic [2:0]                     boot_axil_arprot;
+  logic                           boot_axil_rvalid;
+  logic                           boot_axil_rready;
+  logic [AXIL_DATA_W-1:0]         boot_axil_rdata;
+  logic [1:0]                     boot_axil_rresp;
+
+  logic                           local_axil_awvalid;
+  logic                           local_axil_awready;
+  logic [AXIL_ADDR_W-1:0]         local_axil_awaddr;
+  logic [2:0]                     local_axil_awprot;
+  logic                           local_axil_wvalid;
+  logic                           local_axil_wready;
+  logic [AXIL_DATA_W-1:0]         local_axil_wdata;
+  logic [(AXIL_DATA_W/8)-1:0]     local_axil_wstrb;
+  logic                           local_axil_bvalid;
+  logic                           local_axil_bready;
+  logic [1:0]                     local_axil_bresp;
+  logic                           local_axil_arvalid;
+  logic                           local_axil_arready;
+  logic [AXIL_ADDR_W-1:0]         local_axil_araddr;
+  logic [2:0]                     local_axil_arprot;
+  logic                           local_axil_rvalid;
+  logic                           local_axil_rready;
+  logic [AXIL_DATA_W-1:0]         local_axil_rdata;
+  logic [1:0]                     local_axil_rresp;
+
   logic                           npu_axil_awvalid;
   logic                           npu_axil_awready;
   logic [AXIL_ADDR_W-1:0]         npu_axil_awaddr;
@@ -98,6 +138,26 @@ module u_core_top_soc (
   logic                           npu_axil_rready;
   logic [AXIL_DATA_W-1:0]         npu_axil_rdata;
   logic [1:0]                     npu_axil_rresp;
+
+  logic                           sys_axil_awvalid;
+  logic                           sys_axil_awready;
+  logic [AXIL_ADDR_W-1:0]         sys_axil_awaddr;
+  logic [2:0]                     sys_axil_awprot;
+  logic                           sys_axil_wvalid;
+  logic                           sys_axil_wready;
+  logic [AXIL_DATA_W-1:0]         sys_axil_wdata;
+  logic [(AXIL_DATA_W/8)-1:0]     sys_axil_wstrb;
+  logic                           sys_axil_bvalid;
+  logic                           sys_axil_bready;
+  logic [1:0]                     sys_axil_bresp;
+  logic                           sys_axil_arvalid;
+  logic                           sys_axil_arready;
+  logic [AXIL_ADDR_W-1:0]         sys_axil_araddr;
+  logic [2:0]                     sys_axil_arprot;
+  logic                           sys_axil_rvalid;
+  logic                           sys_axil_rready;
+  logic [AXIL_DATA_W-1:0]         sys_axil_rdata;
+  logic [1:0]                     sys_axil_rresp;
 
   logic                           dma_spm_wr_valid;
   logic                           dma_spm_wr_ready;
@@ -160,40 +220,6 @@ module u_core_top_soc (
 
   assign cpu_irq = 32'b0;
 
-  // The AXI-Lite crossbar and local memories are not implemented yet.
-  assign cpu_axil_awready = 1'b0;
-  assign cpu_axil_wready  = 1'b0;
-  assign cpu_axil_bvalid  = 1'b0;
-  assign cpu_axil_bresp   = 2'b00;
-  assign cpu_axil_arready = 1'b0;
-  assign cpu_axil_rvalid  = 1'b0;
-  assign cpu_axil_rdata   = '0;
-  assign cpu_axil_rresp   = 2'b00;
-
-  assign dma_axil_awvalid = 1'b0;
-  assign dma_axil_awaddr  = '0;
-  assign dma_axil_awprot  = '0;
-  assign dma_axil_wvalid  = 1'b0;
-  assign dma_axil_wdata   = '0;
-  assign dma_axil_wstrb   = '0;
-  assign dma_axil_bready  = 1'b0;
-  assign dma_axil_arvalid = 1'b0;
-  assign dma_axil_araddr  = '0;
-  assign dma_axil_arprot  = '0;
-  assign dma_axil_rready  = 1'b0;
-
-  assign npu_axil_awvalid = 1'b0;
-  assign npu_axil_awaddr  = '0;
-  assign npu_axil_awprot  = '0;
-  assign npu_axil_wvalid  = 1'b0;
-  assign npu_axil_wdata   = '0;
-  assign npu_axil_wstrb   = '0;
-  assign npu_axil_bready  = 1'b0;
-  assign npu_axil_arvalid = 1'b0;
-  assign npu_axil_araddr  = '0;
-  assign npu_axil_arprot  = '0;
-  assign npu_axil_rready  = 1'b0;
-
   cpu_subsys u_cpu_subsys (
     .clk            (clk),
     .rst_n          (rst_n),
@@ -219,6 +245,223 @@ module u_core_top_soc (
     .cpu_axil_rresp (cpu_axil_rresp),
     .irq            (cpu_irq),
     .eoi            (cpu_eoi)
+  );
+
+  u_core_axil_xbar u_core_axil_xbar (
+    .clk              (clk),
+    .rst_n            (rst_n),
+    .m_axil_awvalid   (cpu_axil_awvalid),
+    .m_axil_awready   (cpu_axil_awready),
+    .m_axil_awaddr    (cpu_axil_awaddr),
+    .m_axil_awprot    (cpu_axil_awprot),
+    .m_axil_wvalid    (cpu_axil_wvalid),
+    .m_axil_wready    (cpu_axil_wready),
+    .m_axil_wdata     (cpu_axil_wdata),
+    .m_axil_wstrb     (cpu_axil_wstrb),
+    .m_axil_bvalid    (cpu_axil_bvalid),
+    .m_axil_bready    (cpu_axil_bready),
+    .m_axil_bresp     (cpu_axil_bresp),
+    .m_axil_arvalid   (cpu_axil_arvalid),
+    .m_axil_arready   (cpu_axil_arready),
+    .m_axil_araddr    (cpu_axil_araddr),
+    .m_axil_arprot    (cpu_axil_arprot),
+    .m_axil_rvalid    (cpu_axil_rvalid),
+    .m_axil_rready    (cpu_axil_rready),
+    .m_axil_rdata     (cpu_axil_rdata),
+    .m_axil_rresp     (cpu_axil_rresp),
+    .boot_axil_awvalid(boot_axil_awvalid),
+    .boot_axil_awready(boot_axil_awready),
+    .boot_axil_awaddr (boot_axil_awaddr),
+    .boot_axil_awprot (boot_axil_awprot),
+    .boot_axil_wvalid (boot_axil_wvalid),
+    .boot_axil_wready (boot_axil_wready),
+    .boot_axil_wdata  (boot_axil_wdata),
+    .boot_axil_wstrb  (boot_axil_wstrb),
+    .boot_axil_bvalid (boot_axil_bvalid),
+    .boot_axil_bready (boot_axil_bready),
+    .boot_axil_bresp  (boot_axil_bresp),
+    .boot_axil_arvalid(boot_axil_arvalid),
+    .boot_axil_arready(boot_axil_arready),
+    .boot_axil_araddr (boot_axil_araddr),
+    .boot_axil_arprot (boot_axil_arprot),
+    .boot_axil_rvalid (boot_axil_rvalid),
+    .boot_axil_rready (boot_axil_rready),
+    .boot_axil_rdata  (boot_axil_rdata),
+    .boot_axil_rresp  (boot_axil_rresp),
+    .local_axil_awvalid(local_axil_awvalid),
+    .local_axil_awready(local_axil_awready),
+    .local_axil_awaddr(local_axil_awaddr),
+    .local_axil_awprot(local_axil_awprot),
+    .local_axil_wvalid(local_axil_wvalid),
+    .local_axil_wready(local_axil_wready),
+    .local_axil_wdata (local_axil_wdata),
+    .local_axil_wstrb (local_axil_wstrb),
+    .local_axil_bvalid(local_axil_bvalid),
+    .local_axil_bready(local_axil_bready),
+    .local_axil_bresp (local_axil_bresp),
+    .local_axil_arvalid(local_axil_arvalid),
+    .local_axil_arready(local_axil_arready),
+    .local_axil_araddr(local_axil_araddr),
+    .local_axil_arprot(local_axil_arprot),
+    .local_axil_rvalid(local_axil_rvalid),
+    .local_axil_rready(local_axil_rready),
+    .local_axil_rdata (local_axil_rdata),
+    .local_axil_rresp (local_axil_rresp),
+    .npu_axil_awvalid (npu_axil_awvalid),
+    .npu_axil_awready (npu_axil_awready),
+    .npu_axil_awaddr  (npu_axil_awaddr),
+    .npu_axil_awprot  (npu_axil_awprot),
+    .npu_axil_wvalid  (npu_axil_wvalid),
+    .npu_axil_wready  (npu_axil_wready),
+    .npu_axil_wdata   (npu_axil_wdata),
+    .npu_axil_wstrb   (npu_axil_wstrb),
+    .npu_axil_bvalid  (npu_axil_bvalid),
+    .npu_axil_bready  (npu_axil_bready),
+    .npu_axil_bresp   (npu_axil_bresp),
+    .npu_axil_arvalid (npu_axil_arvalid),
+    .npu_axil_arready (npu_axil_arready),
+    .npu_axil_araddr  (npu_axil_araddr),
+    .npu_axil_arprot  (npu_axil_arprot),
+    .npu_axil_rvalid  (npu_axil_rvalid),
+    .npu_axil_rready  (npu_axil_rready),
+    .npu_axil_rdata   (npu_axil_rdata),
+    .npu_axil_rresp   (npu_axil_rresp),
+    .dma_axil_awvalid (dma_axil_awvalid),
+    .dma_axil_awready (dma_axil_awready),
+    .dma_axil_awaddr  (dma_axil_awaddr),
+    .dma_axil_awprot  (dma_axil_awprot),
+    .dma_axil_wvalid  (dma_axil_wvalid),
+    .dma_axil_wready  (dma_axil_wready),
+    .dma_axil_wdata   (dma_axil_wdata),
+    .dma_axil_wstrb   (dma_axil_wstrb),
+    .dma_axil_bvalid  (dma_axil_bvalid),
+    .dma_axil_bready  (dma_axil_bready),
+    .dma_axil_bresp   (dma_axil_bresp),
+    .dma_axil_arvalid (dma_axil_arvalid),
+    .dma_axil_arready (dma_axil_arready),
+    .dma_axil_araddr  (dma_axil_araddr),
+    .dma_axil_arprot  (dma_axil_arprot),
+    .dma_axil_rvalid  (dma_axil_rvalid),
+    .dma_axil_rready  (dma_axil_rready),
+    .dma_axil_rdata   (dma_axil_rdata),
+    .dma_axil_rresp   (dma_axil_rresp),
+    .sys_axil_awvalid (sys_axil_awvalid),
+    .sys_axil_awready (sys_axil_awready),
+    .sys_axil_awaddr  (sys_axil_awaddr),
+    .sys_axil_awprot  (sys_axil_awprot),
+    .sys_axil_wvalid  (sys_axil_wvalid),
+    .sys_axil_wready  (sys_axil_wready),
+    .sys_axil_wdata   (sys_axil_wdata),
+    .sys_axil_wstrb   (sys_axil_wstrb),
+    .sys_axil_bvalid  (sys_axil_bvalid),
+    .sys_axil_bready  (sys_axil_bready),
+    .sys_axil_bresp   (sys_axil_bresp),
+    .sys_axil_arvalid (sys_axil_arvalid),
+    .sys_axil_arready (sys_axil_arready),
+    .sys_axil_araddr  (sys_axil_araddr),
+    .sys_axil_arprot  (sys_axil_arprot),
+    .sys_axil_rvalid  (sys_axil_rvalid),
+    .sys_axil_rready  (sys_axil_rready),
+    .sys_axil_rdata   (sys_axil_rdata),
+    .sys_axil_rresp   (sys_axil_rresp)
+  );
+
+  u_core_axil_mem #(
+    .BASE_ADDR (BOOT_ROM_BASE),
+    .SIZE_BYTES(BOOT_ROM_SIZE_BYTES),
+    .READ_ONLY (1'b1)
+  ) u_boot_rom (
+    .clk          (clk),
+    .rst_n        (rst_n),
+    .s_axil_awvalid(boot_axil_awvalid),
+    .s_axil_awready(boot_axil_awready),
+    .s_axil_awaddr (boot_axil_awaddr),
+    .s_axil_awprot (boot_axil_awprot),
+    .s_axil_wvalid (boot_axil_wvalid),
+    .s_axil_wready (boot_axil_wready),
+    .s_axil_wdata  (boot_axil_wdata),
+    .s_axil_wstrb  (boot_axil_wstrb),
+    .s_axil_bvalid (boot_axil_bvalid),
+    .s_axil_bready (boot_axil_bready),
+    .s_axil_bresp  (boot_axil_bresp),
+    .s_axil_arvalid(boot_axil_arvalid),
+    .s_axil_arready(boot_axil_arready),
+    .s_axil_araddr (boot_axil_araddr),
+    .s_axil_arprot (boot_axil_arprot),
+    .s_axil_rvalid (boot_axil_rvalid),
+    .s_axil_rready (boot_axil_rready),
+    .s_axil_rdata  (boot_axil_rdata),
+    .s_axil_rresp  (boot_axil_rresp)
+  );
+
+  u_core_axil_mem #(
+    .BASE_ADDR (LOCAL_RAM_BASE),
+    .SIZE_BYTES(LOCAL_RAM_SIZE_BYTES),
+    .READ_ONLY (1'b0)
+  ) u_local_ram (
+    .clk          (clk),
+    .rst_n        (rst_n),
+    .s_axil_awvalid(local_axil_awvalid),
+    .s_axil_awready(local_axil_awready),
+    .s_axil_awaddr (local_axil_awaddr),
+    .s_axil_awprot (local_axil_awprot),
+    .s_axil_wvalid (local_axil_wvalid),
+    .s_axil_wready (local_axil_wready),
+    .s_axil_wdata  (local_axil_wdata),
+    .s_axil_wstrb  (local_axil_wstrb),
+    .s_axil_bvalid (local_axil_bvalid),
+    .s_axil_bready (local_axil_bready),
+    .s_axil_bresp  (local_axil_bresp),
+    .s_axil_arvalid(local_axil_arvalid),
+    .s_axil_arready(local_axil_arready),
+    .s_axil_araddr (local_axil_araddr),
+    .s_axil_arprot (local_axil_arprot),
+    .s_axil_rvalid (local_axil_rvalid),
+    .s_axil_rready (local_axil_rready),
+    .s_axil_rdata  (local_axil_rdata),
+    .s_axil_rresp  (local_axil_rresp)
+  );
+
+  u_core_sys_csr u_core_sys_csr (
+    .clk             (clk),
+    .rst_n           (rst_n),
+    .s_axil_awvalid  (sys_axil_awvalid),
+    .s_axil_awready  (sys_axil_awready),
+    .s_axil_awaddr   (sys_axil_awaddr),
+    .s_axil_awprot   (sys_axil_awprot),
+    .s_axil_wvalid   (sys_axil_wvalid),
+    .s_axil_wready   (sys_axil_wready),
+    .s_axil_wdata    (sys_axil_wdata),
+    .s_axil_wstrb    (sys_axil_wstrb),
+    .s_axil_bvalid   (sys_axil_bvalid),
+    .s_axil_bready   (sys_axil_bready),
+    .s_axil_bresp    (sys_axil_bresp),
+    .s_axil_arvalid  (sys_axil_arvalid),
+    .s_axil_arready  (sys_axil_arready),
+    .s_axil_araddr   (sys_axil_araddr),
+    .s_axil_arprot   (sys_axil_arprot),
+    .s_axil_rvalid   (sys_axil_rvalid),
+    .s_axil_rready   (sys_axil_rready),
+    .s_axil_rdata    (sys_axil_rdata),
+    .s_axil_rresp    (sys_axil_rresp),
+    .cpu_trap        (cpu_trap),
+    .dma_busy        (dma_busy),
+    .dma_done        (dma_done),
+    .dma_error       (dma_error),
+    .npu_armed       (npu_armed),
+    .npu_busy        (npu_busy),
+    .npu_done        (npu_done),
+    .npu_error       (npu_error),
+    .spm_dma_error   (spm_dma_error),
+    .spm_npu_error   (spm_npu_error),
+    .dma_done_count  (dma_done_count),
+    .dma_rd_beat_count(dma_rd_beat_count),
+    .dma_wr_beat_count(dma_wr_beat_count),
+    .npu_stall_cycles(npu_stall_cycles),
+    .dma_error_code  (dma_error_code),
+    .npu_error_code  (npu_error_code),
+    .spm_dma_error_code(spm_dma_error_code),
+    .spm_npu_error_code(spm_npu_error_code)
   );
 
   dma_top u_dma_top (

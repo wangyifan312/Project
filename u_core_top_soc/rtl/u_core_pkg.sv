@@ -43,6 +43,9 @@ package u_core_pkg;
   localparam logic [31:0] NPU_CSR_BASE   = 32'h1000_0000;
   localparam logic [31:0] DMA_CSR_BASE   = 32'h1000_1000;
   localparam logic [31:0] SYS_CSR_BASE   = 32'h1000_2000;
+  localparam logic [31:0] BOOT_ROM_SIZE_BYTES  = 32'h0000_4000;
+  localparam logic [31:0] LOCAL_RAM_SIZE_BYTES = 32'h0000_8000;
+  localparam logic [31:0] CSR_WINDOW_SIZE_BYTES = 32'h0000_1000;
 
   typedef enum logic [1:0] {
     DMA_SPM_TYPE_ACT = 2'b00,

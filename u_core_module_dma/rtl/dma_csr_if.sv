@@ -60,8 +60,8 @@ module dma_csr_if (
         6'h01: read_mux = src_addr_word;
         6'h02: read_mux = dst_addr_word;
         6'h03: read_mux = row_cfg_word;
-        6'h04: read_mux = stride_cfg_word;
-        6'h05: read_mux = local_cfg_word;
+        6'h04: read_mux = 32'h0000_0000;
+        6'h05: read_mux = 32'h0000_0000;
         6'h06: read_mux = 32'h0000_0000;
         6'h07: read_mux = {29'h0, dma_error, dma_done, dma_busy};
         6'h08: read_mux = {27'h0, dma_fifo_level, dma_fifo_full, dma_fifo_empty};
@@ -120,9 +120,7 @@ module dma_csr_if (
             6'h00,
             6'h01,
             6'h02,
-            6'h03,
-            6'h04,
-            6'h05: begin
+            6'h03: begin
               stage_we    <= 1'b1;
               stage_addr  <= awaddr_r[5:2];
               stage_wdata <= wdata_r;

@@ -59,6 +59,10 @@ Each module directory must contain:
 - `rtl/`
 - `doc/`
 
+Optional module-local testbench directory:
+
+- `tb/`
+
 ### `rtl/`
 
 Use each module's `rtl/` directory for synthesizable design code only.
@@ -74,6 +78,24 @@ Constraints:
 
 - all new RTL code must be added only under the corresponding module `rtl/`
 - do not place FS documents, register tables, review notes, or other documentation in `rtl/`
+
+### `tb/`
+
+Use each module's `tb/` directory for lightweight module-owned non-UVM
+simulation content.
+
+Allowed contents:
+
+```text
+u_core_module_xxx/tb/
+└── simple smoke tests, directed testbenches, and local simulation helpers
+```
+
+Constraints:
+
+- keep `tb/` focused on module-local smoke or directed verification
+- do not place UVM environment code under module `tb/`
+- use `u_core_dv_*` for full UVM environments and regression-scale DV content
 
 ### `doc/`
 
@@ -198,5 +220,6 @@ The repository is currently in an early setup phase. The following are already s
 - CPU source is placed under [`u_core_module_cpu/rtl`](/root/Project/u_core_module_cpu/rtl)
 - module directories exist for CPU, DMA, NPU, SPM, and top-level integration
 - each module directory contains `rtl/` and `doc/`
+- module directories may additionally contain `tb/` for lightweight directed tests
 - dedicated DV directories exist for DMA, NPU, SPM, and top-level SoC verification
 - each DV directory contains `tb/`, `env/`, `agent/`, `seq/`, `test/`, `sim/`, and `doc/`

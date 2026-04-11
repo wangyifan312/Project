@@ -70,19 +70,32 @@ for the current first-version single-beat-per-row contract.
 
 ## Descriptor Layout
 
-Current packed descriptor contains:
+Current first-version staging register layout is compacted for CPU programming
+efficiency. A software-visible descriptor now needs only:
 
-- `op_type[1:0]`
-- `src_addr[31:0]`
-- `dst_addr[31:0]`
-- `row_len[15:0]`
-- `row_cnt[15:0]`
-- `src_stride[15:0]`
-- `dst_stride[15:0]`
-- `buf_sel[1:0]`
-- `spm_row_base[15:0]`
-- `tile_id[15:0]`
-- `flags[15:0]`
+- `DMA_DESC_CFG0`
+- `DMA_SRC_ADDR`
+- `DMA_DST_ADDR`
+- `DMA_DESC_CFG1`
+- `DMA_CMD`
+
+Packed field rule:
+
+- `DMA_DESC_CFG0[1:0]`: `op_type`
+- `DMA_DESC_CFG0[3:2]`: `buf_sel`
+- `DMA_DESC_CFG0[6:4]`: `spm_row_base`
+- `DMA_DESC_CFG0[13:7]`: `row_len`
+- `DMA_DESC_CFG0[17:14]`: `row_cnt`
+- `DMA_DESC_CFG1[9:0]`: `ext_stride_units`
+
+Where:
+
+- `ext_stride_units` uses `64B` units
+- `LOAD_ACT / LOAD_WGT` expand this field into `src_stride`
+- `STORE_OUT` expands this field into `dst_stride`
+
+Internally, the packed descriptor bus still expands into the full execution
+shape expected by `dma_addr_gen`, `dma_rd_engine`, and `dma_wr_engine`.
 
 ## Validation Policy In `dma_desc_stage`
 
@@ -96,9 +109,9 @@ Current descriptor validation checks:
 - `LOAD_ACT/LOAD_WGT` allow `buf_sel=0/1`
 - `STORE_OUT` allows only `buf_sel=0`
 - `LOAD_ACT/LOAD_WGT` currently require `src_addr[5:0] == 0`
-- `LOAD_ACT/LOAD_WGT` currently require `src_stride[5:0] == 0`
+- `LOAD_ACT/LOAD_WGT` currently require `ext_stride_units << 6` as the effective aligned source stride
 - `STORE_OUT` currently requires `dst_addr[5:0] == 0`
-- `STORE_OUT` currently requires `dst_stride[5:0] == 0`
+- `STORE_OUT` currently requires `ext_stride_units << 6` as the effective aligned destination stride
 
 ## Scheduling Policy
 

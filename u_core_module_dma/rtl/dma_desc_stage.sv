@@ -28,49 +28,39 @@ module dma_desc_stage (
 
   logic [1:0]  op_type_r;
   logic [1:0]  buf_sel_r;
-  logic [15:0] flags_r;
   logic [31:0] src_addr_r;
   logic [31:0] dst_addr_r;
   logic [15:0] row_len_r;
   logic [15:0] row_cnt_r;
-  logic [15:0] src_stride_r;
-  logic [15:0] dst_stride_r;
+  logic [15:0] ext_stride_r;
   logic [15:0] spm_row_base_r;
-  logic [15:0] tile_id_r;
+  logic [9:0]  ext_stride_units_r;
 
   always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       op_type_r      <= 2'b00;
       buf_sel_r      <= 2'b00;
-      flags_r        <= 16'h0000;
       src_addr_r     <= 32'h0000_0000;
       dst_addr_r     <= 32'h0000_0000;
       row_len_r      <= 16'h0000;
       row_cnt_r      <= 16'h0000;
-      src_stride_r   <= 16'h0000;
-      dst_stride_r   <= 16'h0000;
+      ext_stride_r   <= 16'h0000;
       spm_row_base_r <= 16'h0000;
-      tile_id_r      <= 16'h0000;
+      ext_stride_units_r <= 10'h000;
     end else if (stage_we) begin
       case (stage_addr)
         4'h0: begin
           op_type_r <= stage_wdata[1:0];
           buf_sel_r <= stage_wdata[3:2];
-          flags_r   <= stage_wdata[19:4];
+          spm_row_base_r <= {13'h0000, stage_wdata[6:4]};
+          row_len_r      <= {9'h000, stage_wdata[13:7]};
+          row_cnt_r      <= {12'h000, stage_wdata[17:14]};
         end
         4'h1: src_addr_r <= stage_wdata;
         4'h2: dst_addr_r <= stage_wdata;
         4'h3: begin
-          row_len_r <= stage_wdata[15:0];
-          row_cnt_r <= stage_wdata[31:16];
-        end
-        4'h4: begin
-          src_stride_r <= stage_wdata[15:0];
-          dst_stride_r <= stage_wdata[31:16];
-        end
-        4'h5: begin
-          spm_row_base_r <= stage_wdata[15:0];
-          tile_id_r      <= stage_wdata[31:16];
+          ext_stride_units_r <= stage_wdata[9:0];
+          ext_stride_r       <= {stage_wdata[9:0], 6'b0};
         end
         default: begin end
       endcase
@@ -78,14 +68,14 @@ module dma_desc_stage (
   end
 
   always @* begin
-    cfg0_word       = {12'h000, flags_r, buf_sel_r, op_type_r};
+    cfg0_word       = {14'h0000, row_cnt_r[3:0], row_len_r[6:0], spm_row_base_r[2:0], buf_sel_r, op_type_r};
     src_addr_word   = src_addr_r;
     dst_addr_word   = dst_addr_r;
-    row_cfg_word    = {row_cnt_r, row_len_r};
-    stride_cfg_word = {dst_stride_r, src_stride_r};
-    local_cfg_word  = {tile_id_r, spm_row_base_r};
-    desc_bus = {flags_r, tile_id_r, spm_row_base_r, buf_sel_r, dst_stride_r,
-                src_stride_r, row_cnt_r, row_len_r, dst_addr_r, src_addr_r, op_type_r};
+    row_cfg_word    = {22'h000000, ext_stride_units_r};
+    stride_cfg_word = 32'h0000_0000;
+    local_cfg_word  = 32'h0000_0000;
+    desc_bus = {16'h0000, 16'h0000, spm_row_base_r, buf_sel_r, ext_stride_r,
+                ext_stride_r, row_cnt_r, row_len_r, dst_addr_r, src_addr_r, op_type_r};
 
     desc_valid      = 1'b0;
     desc_error_code = DMA_ERR_NONE;
@@ -130,7 +120,7 @@ module dma_desc_stage (
           if (!((buf_sel_r == 2'd0) || (buf_sel_r == 2'd1))) begin
             desc_valid      = 1'b0;
             desc_error_code = DMA_ERR_ILLEGAL_BUF;
-          end else if ((src_addr_r[5:0] != 6'b0) || (src_stride_r[5:0] != 6'b0)) begin
+          end else if ((src_addr_r[5:0] != 6'b0) || (ext_stride_r[5:0] != 6'b0)) begin
             desc_valid      = 1'b0;
             desc_error_code = DMA_ERR_ALIGN;
           end
@@ -139,7 +129,7 @@ module dma_desc_stage (
           if (buf_sel_r != 2'd0) begin
             desc_valid      = 1'b0;
             desc_error_code = DMA_ERR_ILLEGAL_BUF;
-          end else if ((dst_addr_r[5:0] != 6'b0) || (dst_stride_r[5:0] != 6'b0)) begin
+          end else if ((dst_addr_r[5:0] != 6'b0) || (ext_stride_r[5:0] != 6'b0)) begin
             desc_valid      = 1'b0;
             desc_error_code = DMA_ERR_ALIGN;
           end
